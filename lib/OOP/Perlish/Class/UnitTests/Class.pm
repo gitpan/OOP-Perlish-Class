@@ -19,7 +19,7 @@ use strict;
     {
         my ($self) = @_;
 
-        my $f = Foo->new();
+        my $f = OOP::Perlish::Class::UnitTests::Foo->new();
         $f->foo("Hello foo!");
         is($f->foo(), 'Hello foo!', 'Class assignment');
     }
@@ -28,10 +28,10 @@ use strict;
     {
         my ($self) = @_;
 
-        my $f = Foo->new();
+        my $f = OOP::Perlish::Class::UnitTests::Foo->new();
         $f->foo("Hello foo!");
 
-        my $b = Bar->new();
+        my $b = OOP::Perlish::Class::UnitTests::Bar->new();
         $b->foo("Goodbye Ralph!");
         is($f->foo(), 'Hello foo!', 'Multiple classes');
         is($b->foo(), 'Goodbye Ralph!', 'Multiple classes');
@@ -41,10 +41,10 @@ use strict;
     {
         my ($self) = @_;
 
-        my $f = Foo->new();
+        my $f = OOP::Perlish::Class::UnitTests::Foo->new();
         $f->foo("Hello foo!");
 
-        my $ff = Foo->new();
+        my $ff = OOP::Perlish::Class::UnitTests::Foo->new();
         $ff->foo("foo is the fooyist!");
         is($f->foo(), 'Hello foo!', 'Multiple instances');
         is($ff->foo(), 'foo is the fooyist!', 'Multiple instances');
@@ -54,7 +54,7 @@ use strict;
     {
         my ($self) = @_;
 
-        my $fb = Bar::Bar->new( bar => { dodad => 'bars are great' }, foo => 'Ralph is pretty good too' );
+        my $fb = OOP::Perlish::Class::UnitTests::Bar::Bar->new( bar => { dodad => 'bars are great' }, foo => 'Ralph is pretty good too' );
 
         is($fb->foo(), 'Ralph is pretty good too', 'inheritance, we have foo');
         is($fb->bar()->{dodad}, 'bars are great', 'inheritance, we have bar');
@@ -64,8 +64,8 @@ use strict;
     {
         my ($self) = @_;
 
-        my $bfb = Baz::Foo::Bar->new( bar => 'bar', foo => 'foo');
-        my $bfbo = Baz::Foo::Bar::Overload->new( bar => 'Bar overloaded!' );
+        my $bfb = OOP::Perlish::Class::UnitTests::Baz::Foo::Bar->new( bar => 'bar', foo => 'foo');
+        my $bfbo = OOP::Perlish::Class::UnitTests::Baz::Foo::Bar::Overload->new( bar => 'Bar overloaded!' );
 
         is($bfb->foo(), 'foo', 'Multiple inheritance with overloading, non-overloaded foo');
         is($bfb->bar(), 'bar', 'Multiple inheritance with overloading, non-overloaded bar');
@@ -78,8 +78,8 @@ use strict;
     {
         my ($self) = @_;
 
-        my $bfbo = Baz::Foo::Bar::Overload->new( bar => 'Bar overloaded!' );
-        my $bfb = Baz::Foo::Bar->new( bar => 'bar', foo => 'foo');
+        my $bfbo = OOP::Perlish::Class::UnitTests::Baz::Foo::Bar::Overload->new( bar => 'Bar overloaded!' );
+        my $bfb = OOP::Perlish::Class::UnitTests::Baz::Foo::Bar->new( bar => 'bar', foo => 'foo');
 
         is($bfb->foo(), 'foo', 'Multiple inheritance with overloading, non-overloaded foo');
         is($bfb->bar(), 'bar', 'Multiple inheritance with overloading, non-overloaded bar');
@@ -92,7 +92,7 @@ use strict;
     {
         my ($self) = @_;
 
-        my $bfb = Baz::Foo::Bar->new( bar => 'bar', foo => 'foo');
+        my $bfb = OOP::Perlish::Class::UnitTests::Baz::Foo::Bar->new( bar => 'bar', foo => 'foo');
         is($bfb->foo(), 'foo', 'Multiple inheritance, foo');
         is($bfb->bar(), 'bar', 'Multiple inheritance, bar');
         is($bfb->baz(), 'baz', 'Multiple inheritance, baz');
@@ -103,7 +103,7 @@ use strict;
     {
         my ($self) = @_;
 
-        my $fred = Fred->new( bar => 'set this' );
+        my $fred = OOP::Perlish::Class::UnitTests::Fred->new( bar => 'set this' );
         ok( $fred->can('find'), 'Inherited from non-derived class' );
         is($fred->bar(), 'set this', 'Value set on accessor still valid on derivded-class' );
     }
@@ -115,7 +115,7 @@ use strict;
         my $obj;
 
         eval { 
-            $obj = TestValidDefaults->new();
+            $obj = OOP::Perlish::Class::UnitTests::TestValidDefaults->new();
         };
         ok( ! "$@", 'did not croak on instantiation' );
 
@@ -129,7 +129,7 @@ use strict;
     sub invalid_defaults 
     {
         my ($self, $type) = @_;
-        my $classname = 'TestInvalidDefault' . ucfirst(lc($type)); 
+        my $classname = 'OOP::Perlish::Class::UnitTests::TestInvalidDefault' . ucfirst(lc($type)); 
 
         my $obj;
 
@@ -176,7 +176,7 @@ use strict;
     {
         my ($self) = @_;
 
-        my $obj = TestAccessorOverloadingWithMethod->new( fud => 'bar' );
+        my $obj = OOP::Perlish::Class::UnitTests::TestAccessorOverloadingWithMethod->new( fud => 'bar' );
         is( $obj->fud(), 'method, not accessor', 'we can successfully overload an accessor with a method' );
     }
 
@@ -184,7 +184,7 @@ use strict;
     {
         my ($self) = @_;
         eval { 
-            my $obj = TestAccessorOverloadingWithMethod->new();
+            my $obj = OOP::Perlish::Class::UnitTests::TestAccessorOverloadingWithMethod->new();
         };
 
         ok( "$@", 'We died, presumably because of the missing required' );
@@ -195,7 +195,7 @@ use strict;
     {
         my ($self) = @_;
         eval { 
-            my $obj = TestRequired->new();
+            my $obj = OOP::Perlish::Class::UnitTests::TestRequired->new();
         };
 
         ok( "$@", 'We died, presumably because of the missing required' );

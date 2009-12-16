@@ -16,7 +16,7 @@ use strict;
     package OOP::Perlish::Class;
     use warnings;
     use strict;
-    our $VERSION = 0.0100;
+    our $VERSION = 0.0101;
     use OOP::Perlish::Class::Accessor;
     use Tie::IxHash;
     use Exporter;

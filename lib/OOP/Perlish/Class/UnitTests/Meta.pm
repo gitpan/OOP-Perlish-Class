@@ -2,7 +2,7 @@
 use warnings;
 use strict;
 {
-	package Meta::Foo;
+	package OOP::Perlish::Class::Meta::UnitTests::Foo;
     use OOP::Perlish::Class;
     use base 'OOP::Perlish::Class';
 
@@ -12,24 +12,24 @@ use strict;
     }
 }
 {
-	package Meta::Bar;
-	use base 'Meta::Foo';
+	package OOP::Perlish::Class::Meta::UnitTests::Bar;
+	use base 'OOP::Perlish::Class::Meta::UnitTests::Foo';
     sub bar 
     {
         return;
     }
 }
 {
-	package Meta::Baz; 
-	use base 'Meta::Bar';
+	package OOP::Perlish::Class::Meta::UnitTests::Baz; 
+	use base 'OOP::Perlish::Class::Meta::UnitTests::Bar';
     sub baz 
     {
         return;
     }
 }
 {
-	package Meta::Quux;
-	use base qw(Meta::Baz Meta::Bar);
+	package OOP::Perlish::Class::Meta::UnitTests::Quux;
+	use base qw(OOP::Perlish::Class::Meta::UnitTests::Baz OOP::Perlish::Class::Meta::UnitTests::Bar);
 
     sub quux
     {
@@ -37,8 +37,8 @@ use strict;
     }
 }
 {
-	package Meta::Thud;
-	use base qw(Meta::Quux Meta::Foo);
+	package OOP::Perlish::Class::Meta::UnitTests::Thud;
+	use base qw(OOP::Perlish::Class::Meta::UnitTests::Quux OOP::Perlish::Class::Meta::UnitTests::Foo);
 
     sub thud
     {
@@ -55,8 +55,8 @@ use strict;
     {
         my ($self) = @_;
 
-        my $n = Meta::Thud->new();
-        my @correct = ( 'Meta::Thud', 'Meta::Quux', 'Meta::Baz', 'Meta::Bar', 'Meta::Foo', 'OOP::Perlish::Class', ); # results are in order depth-last by Tie::IxHash
+        my $n = OOP::Perlish::Class::Meta::UnitTests::Thud->new();
+        my @correct = ( 'OOP::Perlish::Class::Meta::UnitTests::Thud', 'OOP::Perlish::Class::Meta::UnitTests::Quux', 'OOP::Perlish::Class::Meta::UnitTests::Baz', 'OOP::Perlish::Class::Meta::UnitTests::Bar', 'OOP::Perlish::Class::Meta::UnitTests::Foo', 'OOP::Perlish::Class', ); # results are in order depth-last by Tie::IxHash
         my @results = $n->_all_isa();
 
         is(scalar @results, scalar @correct, 'We have the right number of results');
@@ -67,7 +67,7 @@ use strict;
 
     sub all_methods : Test(5)
     {
-        my $n = Meta::Thud->new();
+        my $n = OOP::Perlish::Class::Meta::UnitTests::Thud->new();
         my @correct = ( 'thud', 'bar', 'baz', 'quux', 'foo' );
         my @results = $n->_all_methods();
         my %results_lut;
@@ -80,9 +80,9 @@ use strict;
 
     sub all_methods_external : Test(5)
     {
-        my $n = Meta::Foo->new();
+        my $n = OOP::Perlish::Class::Meta::UnitTests::Foo->new();
         my @correct = ( 'thud', 'bar', 'baz', 'quux', 'foo' );
-        my @results = $n->_all_methods('Meta::Thud');
+        my @results = $n->_all_methods('OOP::Perlish::Class::Meta::UnitTests::Thud');
         my %results_lut;
         @results_lut{ @results } = undef;
 

@@ -1,5 +1,5 @@
 {
-    package MyAbstractClass;
+    package OOP::Perlish::Class::Abstract::UnitTests::MyAbstractClass;
     use warnings;
     use strict;
     use OOP::Perlish::Class::Abstract;
@@ -15,10 +15,10 @@
 }
 
 {
-    package MyImplementationClass;
+    package OOP::Perlish::Class::Abstract::UnitTests::MyImplementationClass;
     use warnings;
     use strict;
-    use base qw(MyAbstractClass);
+    use base qw(OOP::Perlish::Class::Abstract::UnitTests::MyAbstractClass);
 
     sub my_interface
     {
@@ -29,10 +29,10 @@
 }
 
 {
-    package MyBogusImplementationClass;
+    package OOP::Perlish::Class::Abstract::UnitTests::MyBogusImplementationClass;
     use warnings;
     use strict;
-    use base qw(MyAbstractClass);
+    use base qw(OOP::Perlish::Class::Abstract::UnitTests::MyAbstractClass);
 
     sub my_optional_interface
     {
@@ -41,7 +41,7 @@
 }
 
 {
-    package MyConsumerClass;
+    package OOP::Perlish::Class::Abstract::UnitTests::MyConsumerClass;
     use warnings;
     use strict;
     use base qw(OOP::Perlish::Class);
@@ -50,7 +50,7 @@
        __PACKAGE__->_accessors(
            foo => {
                type => 'OBJECT',
-               implements => [ 'MyAbstractClass' ],
+               implements => [ 'OOP::Perlish::Class::Abstract::UnitTests::MyAbstractClass' ],
                required => 1,
            },
        );
@@ -75,8 +75,8 @@
     {
         my ($self) = @_;
 
-        my $foo = MyImplementationClass->new();
-        my $bar = MyConsumerClass->new( foo => $foo );
+        my $foo = OOP::Perlish::Class::Abstract::UnitTests::MyImplementationClass->new();
+        my $bar = OOP::Perlish::Class::Abstract::UnitTests::MyConsumerClass->new( foo => $foo );
 
         is( $bar->quux(), 'foo', 'we get see foo through all this' ) ;
     }
@@ -88,7 +88,7 @@
         my $foo = OOP::Perlish::Class->new();
         my $bar;
         eval { 
-            $bar = MyConsumerClass->new( foo => $foo );
+            $bar = OOP::Perlish::Class::Abstract::UnitTests::MyConsumerClass->new( foo => $foo );
         };
 
         ok( "$@", 'we died trying to set an invalid object' );
@@ -100,7 +100,7 @@
         my ($self) = @_;
 
         eval {
-            my $foo = MyBogusImplementationClass->new();
+            my $foo = OOP::Perlish::Class::Abstract::UnitTests::MyBogusImplementationClass->new();
         };
 
         ok( "$@", 'we die when a class is missing required interfaces' );
@@ -112,7 +112,7 @@
         my ($self) = @_;
 
         eval {
-            MyBogusImplementationClass->my_interface();
+            OOP::Perlish::Class::Abstract::UnitTests::MyBogusImplementationClass->my_interface();
         };
         ok( "$@", 'we die when a class is missing required interfaces' );
         ok( "$@" =~ m/Interface my_interface is required, but was not defined/, 'we died for the right reasons' );

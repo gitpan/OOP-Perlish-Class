@@ -11,7 +11,7 @@
     {
         my ($self) = @_;
 
-        $self->{obj} = Baz::Foo::Bar->new( bar => 'bar' );
+        $self->{obj} = OOP::Perlish::Class::UnitTests::Baz::Foo::Bar->new( bar => 'bar' );
 
         $self->{obj}->_emitlevel(9);
         $self->{string} = '';

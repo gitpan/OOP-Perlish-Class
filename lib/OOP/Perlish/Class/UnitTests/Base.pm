@@ -11,7 +11,7 @@ use strict;
 }
 
 {
-	package Foo;
+	package OOP::Perlish::Class::UnitTests::Foo;
     use warnings;
     use strict;
 	use OOP::Perlish::Class; 
@@ -28,7 +28,7 @@ use strict;
 }
 
 {
-	package Bar;
+	package OOP::Perlish::Class::UnitTests::Bar;
     use warnings;
     use strict;
 	use OOP::Perlish::Class; 
@@ -44,10 +44,10 @@ use strict;
 	};
 }
 {
-    package Bar::Bar;
+    package OOP::Perlish::Class::UnitTests::Bar::Bar;
     use warnings;
     use strict;
-    use base 'Bar';
+    use base 'OOP::Perlish::Class::UnitTests::Bar';
 
     BEGIN {
         __PACKAGE__->_accessors(
@@ -59,7 +59,7 @@ use strict;
     };
 }
 {
-    package Baz;
+    package OOP::Perlish::Class::UnitTests::Baz;
     use warnings;
     use strict;
     use base qw(OOP::Perlish::Class);
@@ -75,10 +75,10 @@ use strict;
 }
 
 {
-    package Baz::Foo::Bar;
+    package OOP::Perlish::Class::UnitTests::Baz::Foo::Bar;
     use warnings;
     use strict;
-    use base qw( Foo Baz );
+    use base qw( OOP::Perlish::Class::UnitTests::Foo OOP::Perlish::Class::UnitTests::Baz );
 
     BEGIN {
         __PACKAGE__->_accessors(
@@ -102,10 +102,10 @@ use strict;
 }
 
 {
-    package Baz::Foo::Bar::Overload;
+    package OOP::Perlish::Class::UnitTests::Baz::Foo::Bar::Overload;
     use warnings;
     use strict;
-    use base qw(Baz::Foo::Bar);
+    use base qw(OOP::Perlish::Class::UnitTests::Baz::Foo::Bar);
 
     BEGIN {
         __PACKAGE__->_accessors(
@@ -118,7 +118,7 @@ use strict;
 }
 
 {
-    package Fred;
+    package OOP::Perlish::Class::UnitTests::Fred;
     use warnings;
     use strict;
     use IO::File;
@@ -135,7 +135,7 @@ use strict;
 }
 
 {
-    package TestRequired;
+    package OOP::Perlish::Class::UnitTests::TestRequired;
     use warnings;
     use strict;
     use base qw(OOP::Perlish::Class);
@@ -151,11 +151,11 @@ use strict;
 }
 
 {
-    package TestAccessorOverloadingWithMethod;
+    package OOP::Perlish::Class::UnitTests::TestAccessorOverloadingWithMethod;
     use warnings;
     use strict;
 
-    use base qw(TestRequired);
+    use base qw(OOP::Perlish::Class::UnitTests::TestRequired);
 
     sub fud
     {
@@ -167,7 +167,7 @@ use strict;
 
 
 {
-    package TestValidDefaults;
+    package OOP::Perlish::Class::UnitTests::TestValidDefaults;
     use warnings;
     use strict;
     use base qw(OOP::Perlish::Class);
@@ -204,7 +204,7 @@ use strict;
 }
  
 {
-    package TestInvalidDefaultScalar;
+    package OOP::Perlish::Class::UnitTests::TestInvalidDefaultScalar;
     use warnings;
     use strict;
     use base qw(OOP::Perlish::Class);
@@ -221,7 +221,7 @@ use strict;
     }
 }
 {
-    package TestInvalidDefaultArray;
+    package OOP::Perlish::Class::UnitTests::TestInvalidDefaultArray;
     use warnings;
     use strict;
     use base qw(OOP::Perlish::Class);
@@ -238,7 +238,7 @@ use strict;
     };
 }
 {
-    package TestInvalidDefaultHash;
+    package OOP::Perlish::Class::UnitTests::TestInvalidDefaultHash;
     use warnings;
     use strict;
     use base qw(OOP::Perlish::Class);
@@ -255,7 +255,7 @@ use strict;
     };
 }
 {
-    package TestInvalidDefaultCode;
+    package OOP::Perlish::Class::UnitTests::TestInvalidDefaultCode;
     use warnings;
     use strict;
     use base qw(OOP::Perlish::Class);
@@ -271,7 +271,7 @@ use strict;
     };
 }
 {
-    package TestInvalidDefaultObject;
+    package OOP::Perlish::Class::UnitTests::TestInvalidDefaultObject;
     use warnings;
     use strict;
     use base qw(OOP::Perlish::Class);

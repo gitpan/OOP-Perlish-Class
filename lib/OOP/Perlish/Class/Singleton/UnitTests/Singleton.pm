@@ -1,7 +1,7 @@
 #!/usr/bin/perl
 
 {
-	package Foo;
+	package OOP::Perlish::Class::Singleton::UnitTests::Foo;
 	use OOP::Perlish::Class::Singleton;
 	use base qw(OOP::Perlish::Class::Singleton);
     
@@ -27,9 +27,9 @@
     {
         my ($self) = @_;
 
-        my $a = Foo->new( bar => 'bar-baz' );
-        my $b = Foo->new( bar => 'bar-fred' );
-        my $c = Foo->new();
+        my $a = OOP::Perlish::Class::Singleton::UnitTests::Foo->new( bar => 'bar-baz' );
+        my $b = OOP::Perlish::Class::Singleton::UnitTests::Foo->new( bar => 'bar-fred' );
+        my $c = OOP::Perlish::Class::Singleton::UnitTests::Foo->new();
 
         is($a, $b, 'Singleton instantiation a=>b');
         is($b, $c, 'Singleton instantiation b=>c');

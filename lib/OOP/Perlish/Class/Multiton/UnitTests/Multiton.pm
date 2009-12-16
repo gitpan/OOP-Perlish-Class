@@ -1,6 +1,6 @@
 #!/usr/bin/perl
 {
-	package Test1;
+	package OOP::Perlish::Class::Multiton::UnitTests::Test1;
 	use OOP::Perlish::Class::Multiton;
 	use base qw(OOP::Perlish::Class::Multiton);
 
@@ -22,10 +22,10 @@
     {
         my ($self) = @_;
 
-        my $a = Test1->new( thing => 'hello foo' );
-        my $b = Test1->new( thing => 'goodbye foo' );
-        my $c = Test1->new( thing => 'hello foo' );
-        my $d = Test1->new( thing => 'goodbye foo' );
+        my $a = OOP::Perlish::Class::Multiton::UnitTests::Test1->new( thing => 'hello foo' );
+        my $b = OOP::Perlish::Class::Multiton::UnitTests::Test1->new( thing => 'goodbye foo' );
+        my $c = OOP::Perlish::Class::Multiton::UnitTests::Test1->new( thing => 'hello foo' );
+        my $d = OOP::Perlish::Class::Multiton::UnitTests::Test1->new( thing => 'goodbye foo' );
 
         is($a, $c, 'Multitons of the same key are the same a => c');
         is($b, $d, 'Multitons of the same key are the same b => d');

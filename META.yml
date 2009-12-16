@@ -1,6 +1,6 @@
 --- #YAML:1.0
 name:                OOP-Perlish-Class
-version:             0.01
+version:             0.0101
 abstract:            A Base class implementation providing the fundimental infrastructure for perl OOP
 license:             perl
 author:              
