@@ -4,6 +4,7 @@
     use base qw(OOP::Perlish::Class::Accessor::UnitTests::Base);
     use OOP::Perlish::Class::Accessor;
     use Test::More;
+    use Data::Dumper;
 
     sub setup : Test(setup)
     {
@@ -76,6 +77,13 @@
 
         $self->{accessor}->validator( sub { my ($self, $value) = @_; $value eq 'hello' && return $value; return } );
         $self->use_validator("hello");
+    }
+
+    sub unset_value : Test
+    {
+        my ($self) = @_;
+        my $undef = $self->get_value(); 
+        ok( ! $undef, 'when nothing has been defined, we get undef for scalar' ) || diag(Dumper($undef));
     }
 }
 1;

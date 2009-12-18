@@ -461,8 +461,12 @@ use strict;
         my ($self) = @_;
         if($self->type() =~ m/REF/) {
             return $self->reference();
-        } else {
-            return;
+        }
+        elsif($self->type() eq 'SCALAR') {
+            return undef;
+        }
+        else {
+            return( () );
         }
     }
  
@@ -482,6 +486,9 @@ use strict;
             }
         }
         elsif( $self->is_set() == 0 ) {
+            return $self->__appropriate_undef_value();
+        }
+        elsif( $self->is_set() == -1 && ! $self->default_is_set() ) {
             return $self->__appropriate_undef_value();
         }
         elsif( $self->default_is_set() ) {
