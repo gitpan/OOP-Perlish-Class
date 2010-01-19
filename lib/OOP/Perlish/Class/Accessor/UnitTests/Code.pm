@@ -4,6 +4,7 @@
     use base qw(OOP::Perlish::Class::Accessor::UnitTests::Base);
     use OOP::Perlish::Class::Accessor;
     use Test::More;
+    use Data::Dumper;
 
     sub setup : Test(setup)
     {
@@ -38,6 +39,13 @@
 
         $self->{accessor}->value( $coderef );
         is( $self->{accessor}->value()->(), 'Foo', 'can set coderef' );
+    }
+
+    sub unset_value : Test
+    {
+        my ($self) = @_;
+        my $undef = $self->{accessor}->value();
+        ok( ! $undef, 'when nothing has been defined, we get undef for scalar' ) || diag(Dumper($undef));
     }
 }
 1;

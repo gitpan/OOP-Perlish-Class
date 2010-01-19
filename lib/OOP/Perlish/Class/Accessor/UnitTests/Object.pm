@@ -141,6 +141,13 @@
         $self->{accessor}->value($obj);
         ok( ! $self->{accessor}->value(), 'Negative assertion: cannot set an object not matching implementation');
     }
+
+    sub unset_value : Test
+    {
+        my ($self) = @_;
+        my $undef = $self->{accessor}->value();
+        ok( ! $undef, 'when nothing has been defined, we get undef for scalar' ) || diag(Dumper($undef));
+    }
 }
 1;
 

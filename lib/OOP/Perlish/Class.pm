@@ -16,7 +16,7 @@ use strict;
     package OOP::Perlish::Class;
     use warnings;
     use strict;
-    our $VERSION = 0.02;
+    our $VERSION = 0.03;
     use OOP::Perlish::Class::Accessor;
     use Tie::IxHash;
     use Exporter;
@@ -111,10 +111,15 @@ use strict;
         @{ $self->{____CLASS_ISA} } = @{ $class . '::ISA' };
         use strict 'refs';
 
-        for my $parent_class ( @{ $self->{____CLASS_ISA} } ) {
+        #for my $parent_class ( @{ $self->{____CLASS_ISA} } ) {
+        #    bless( $self, $parent_class );
+        #}
+
+        bless( $self, $class ); ## Bless so we can call _all_isa
+        for my $parent_class ( $self->_all_isa() ) {
             bless( $self, $parent_class );
         }
-        bless( $self, $class );
+        bless( $self, $class ); ## Bless back into this class last so we deref correctly
         $self = $self->____initialize_object(%opts);
 
         return $self;
@@ -639,7 +644,8 @@ use strict;
         }
 
         ### Assimilate inherited accessor references
-        for my $parent_class ( @{ $self->{____CLASS_ISA} } ) {
+        #for my $parent_class ( @{ $self->{____CLASS_ISA} } ) {
+        for my $parent_class ( $self->_all_isa() ) {
             if( $parent_class && bless( {}, $parent_class )->can('____OOP_PERLISH_CLASS_ACCESSORS') ) {
                 while( my ( $k, $v ) = each %{ $parent_class->____OOP_PERLISH_CLASS_ACCESSORS() } ) {
                     $self->____OOP_PERLISH_CLASS_ACCESSORS()->{$k} = $v unless( exists( $top_accessors{$k} ) );    #protect overloading
@@ -705,7 +711,8 @@ use strict;
 
             # FIXME: Does not cascade beyond @ISA, should traverse inheritance tree and ensure that all required fields are
             # provided for any hiararchy. ... does cascade via new, but only to ancesters who conform with us. unsure how to fix
-            for my $parent_class ( @{ $self->{____CLASS_ISA} } ) {
+            #for my $parent_class ( @{ $self->{____CLASS_ISA} } ) {
+            for my $parent_class ( $self->_all_isa() ) {
                 if( bless( {}, $parent_class )->can('____OOP_PERLISH_CLASS_REQUIRED_FIELDS') ) {
                     @required_fields{ @{ $parent_class->____OOP_PERLISH_CLASS_REQUIRED_FIELDS() } } =
                       @{ $parent_class->____OOP_PERLISH_CLASS_REQUIRED_FIELDS() };

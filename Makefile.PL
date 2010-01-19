@@ -2,6 +2,8 @@ use strict;
 use warnings;
 use ExtUtils::MakeMaker;
 
+use 5.008;
+
 WriteMakefile(
     NAME                => 'OOP::Perlish::Class',
     AUTHOR              => q{Jamie Beverly <jbeverly@cpan.org>},

@@ -9,6 +9,7 @@ use strict;
     use base 'OOP::Perlish::Class::Accessor::UnitTests::Base';
     use OOP::Perlish::Class::Accessor;
     use Test::More;
+    use Data::Dumper;
 
     sub get_value
     {
@@ -102,6 +103,15 @@ use strict;
         );
         $self->use_validator(%values);
     }
+
+    sub unset_value : Test
+    {
+        my ($self) = @_;
+
+        my %test = $self->get_value();
+        ok( ! keys %test, 'we get an empty list when nothing has been set' ) || diag( Dumper( { %test } ) );
+    }
+
 }
 1;
 =head1 NAME
