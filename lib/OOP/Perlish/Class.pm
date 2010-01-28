@@ -16,10 +16,11 @@ use strict;
     package OOP::Perlish::Class;
     use warnings;
     use strict;
-    our $VERSION = 0.03;
+    our $VERSION = '0.4.0';
     use OOP::Perlish::Class::Accessor;
     use Tie::IxHash;
     use Exporter;
+    use IO::Handle;
 
     use constant OOP_PERLISH_CLASS_EMITLEVEL_FATAL   => 0;
     use constant OOP_PERLISH_CLASS_EMITLEVEL_ERROR   => 1;
@@ -238,7 +239,7 @@ use strict;
         my ( $self, @msgs ) = @_;
 
         if( $self->_emitlevel() >= OOP_PERLISH_CLASS_EMITLEVEL_FATAL ) {
-            croak( join( '', map { ( my $l = $_ ) =~ s/^/FATAL: /gms } @msgs ) . $/ );
+            croak( map { my $l = defined($_) ? $_ : 'undef'; chomp($l); $l =~ s/^/FATAL: /gms; $l . $/ } @msgs );
         }
         return;
     }
@@ -292,30 +293,37 @@ use strict;
     ##   methods defined nearer-ancestors
     ##   methods defined in this-class
     ## )
+    ## now memoized, as this becomes a substantial performance hit otherwise.
     ############################################################################################
     sub _all_methods(@)
     {
         my ( $self, $class ) = @_;
         $class ||= ref($self) || $self;
 
-        my %all_methods = ();
+        our %____oop_perlish_class_all_methods;
 
-        ### preserve order so that methods defined in hiarchies are preserved in the order they
-        ### occur
-        tie %all_methods, q(Tie::IxHash);
+        unless(exists($____oop_perlish_class_all_methods{$class})) { 
+            my %all_methods = ();
 
-        for my $parent_class ( $self->_all_isa($class) ) {
-            no strict 'refs';
-            for my $symbol ( keys %{ '::' . $parent_class . '::' } ) {
-                $all_methods{$symbol} = 1 if( bless( {}, $class )->can($symbol) );
+            ### preserve order so that methods defined in hiarchies are preserved in the order they
+            ### occur
+            tie %all_methods, q(Tie::IxHash);
+
+            for my $parent_class ( $self->_all_isa($class) ) {
+                no strict 'refs';
+                for my $symbol ( keys %{ '::' . $parent_class . '::' } ) {
+                    $all_methods{$symbol} = 1 if( bless( {}, $class )->can($symbol) );
+                }
+                use strict 'refs';
             }
-            use strict 'refs';
+
+            ### Reverse the order of methods found, so that for meta-programming iteration, we run
+            ### the methods defined in top-level derived classes last (so they can override
+            ### inherited methods return values and such)
+            $____oop_perlish_class_all_methods{$class} = [ reverse keys %all_methods ];
         }
 
-        ### Reverse the order of methods found, so that for meta-programming iteration, we run
-        ### the methods defined in top-level derived classes last (so they can override
-        ### inherited methods return values and such)
-        return reverse keys %all_methods;
+        return( @{ $____oop_perlish_class_all_methods{$class} } );
     }
 
     ############################################################################################
