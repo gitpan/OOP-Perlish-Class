@@ -16,7 +16,7 @@ use strict;
     package OOP::Perlish::Class;
     use warnings;
     use strict;
-    our $VERSION = '0.40.0';
+    our $VERSION = '0.45.0';
     use OOP::Perlish::Class::Accessor;
     use Tie::IxHash;
     use Exporter;
@@ -248,13 +248,21 @@ use strict;
     ## Stub of a _preinit; note that init must return true or object initialization will fail
     ## This method does object initialization _before_ accessors have been set
     ############################################################################################
-    sub _preinit(@) { return 1; }
+    sub _preinit(@) {
+        my ($self, @args) = @_;
+        $self->_all_SUPER('_preinit', @args);
+        return 1; 
+    }
 
     ############################################################################################
     ## Stub of an _init; note that init must return true or object initialization will fail
     ## This method does object initialization _after_ accessors have been set
     ############################################################################################
-    sub _init(@) { return 1; }
+    sub _init(@) {
+        my ($self, @args) = @_;
+        $self->_all_SUPER('_init', @args);
+        return 1; 
+    }
 
     ############################################################################################
     ## name of the class which we use for accessors; overload if you want to use a different
@@ -350,6 +358,28 @@ use strict;
         return keys %{ $self->{____isa_hash}->{$class} };
     }
 
+
+    ############################################################################################
+    ## run a method in all immediate members of @ISA
+    ############################################################################################
+    sub _all_SUPER
+    {
+        my ($self, $method, @args) = @_;
+        my $root_class = __PACKAGE__;
+
+        for my $parent_class ( grep { !/^\Q$root_class\E$/ } @{ $self->{____CLASS_ISA} } ) {
+            if($parent_class->can($method)) {
+                no strict 'refs';
+                my $sub = *{ $parent_class . '::' . $method };
+                use strict;
+                if(*{ $sub }{CODE}) { 
+                    $sub->($self, @args);
+                }
+            }
+        }
+    }
+
+
     ############################################################################################
     ## DO NOT USE UNLESS YOU KNOW WHAT YOU ARE DOING!
     ############################################################################################
@@ -440,19 +470,19 @@ use strict;
     ## '_____oop_perlish_class__defer__required__fields__validation', set the key value pair
     ## 'defer_required_fields' to when we see that arg passed to a constructor (and its true)
     ############################################################################################
-    sub _magic_constructor_arg_handler_defer_required(@)
-    {
-        my ( $self, $opts ) = @_;
-
-        my $key = 'defer_required_fields';
-        my $defer_required_fields;
-
-        if( exists( $opts->{_____oop_perlish_class__defer__required__fields__validation} ) ) {
-            $defer_required_fields = $opts->{_____oop_perlish_class__defer__required__fields__validation};
-            delete $opts->{_____oop_perlish_class__defer__required__fields__validation};
-        }
-        return ( $key, $defer_required_fields );
-    }
+    #sub _magic_constructor_arg_handler_defer_required(@)
+    #{
+    #    my ( $self, $opts ) = @_;
+    #
+    #    my $key = 'defer_required_fields';
+    #    my $defer_required_fields;
+    #
+    #    if( exists( $opts->{_____oop_perlish_class__defer__required__fields__validation} ) ) {
+    #        $defer_required_fields = $opts->{_____oop_perlish_class__defer__required__fields__validation};
+    #        delete $opts->{_____oop_perlish_class__defer__required__fields__validation};
+    #    }
+    #    return ( $key, $defer_required_fields );
+    #}
 
     ############################################################################################
     ## List all classes which are derived from a given base class (or the class $self was
@@ -569,13 +599,14 @@ use strict;
         %{ $self->{____oop_perlish_class_opts} } = %opts;
 
         $self->____inherit_accessors();
-        $self->____pre_validate_opts() unless( $magic{defer_required_fields} );
-        $self->____inherit_constructed_refs();
-        $self->____initialize_required_fields() unless( $magic{defer_required_fields} );
+        $self->____pre_validate_opts(); #unless( $magic{defer_required_fields} );
+        ### XXX: unnessessary, and annoying XXX $self->____inherit_constructed_refs();
+        ### XXX: Might want to make a for (@ISA) { $_::_init(@_); } or similar for multiple_inheritance considerations.
+        $self->____initialize_required_fields();# unless( $magic{defer_required_fields} );
         return unless( $self->_preinit() );
         $self->____initialize_non_required_fields();
         return unless( $self->_init() );
-        $self->{__initialized} = 1;
+        $self->{__initialized} = 1; # unless($magic{defer_required_fields});
 
         return $self;
     }
@@ -669,7 +700,7 @@ use strict;
     ############################################################################################
     ## FIXME: We only support deriving from blessed-hashref classes.
     ############################################################################################
-    sub ____inherit_constructed_refs(@)
+    sub ____inherit_constructed_refs
     {
         my ($self) = @_;
 
@@ -1035,19 +1066,21 @@ Used internally, typically should not be overloaded -- See source.
 
 Walks @ISA of every parent, and infers their accessors, preserving hiarchial inheritance for overloaded accessors.
 
-=item $self->____pre_validate_opts() unless( $magic{defer_required_fields} );
+=item $self->____pre_validate_opts()
 
 Usually not overloaded, but occasionally you might want to do additional pre-validation prior to populating required fields. 
 
 Takes no arguments (other than $self), returns nothing; expected to croak if there is an error with the options passed to the constructor.
 
-=item $self->____inherit_constructed_refs();
+=cut
 
-Used internally, typically should not be overloaded -- See source.
+#=item $self->____inherit_constructed_refs();
+#
+#Used internally, typically should not be overloaded -- See source.
+#
+#Inherits hash-references from all parent instances of '$self'
 
-Inherits hash-references from all parent instances of '$self'
-
-=item $self->____initialize_required_fields() unless( $magic{defer_required_fields} );
+=item $self->____initialize_required_fields()
 
 Usually not overloaded, -- See source.
 
